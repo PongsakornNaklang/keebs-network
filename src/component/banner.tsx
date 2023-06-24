@@ -56,7 +56,7 @@ export default function Banner() {
             text:
                 "A vibrant and inclusive gathering place for keyboard enthusiasts from all walks of life! This dynamic community serves as a hub for passionate individuals who appreciate the art, craftsmanship, and sheer joy of mechanical keyboards.",
             image:
-                'https://images.squarespace-cdn.com/content/v1/5f45fc75e970ce77721e4c31/1652029964184-3IPIFGW1WAR1BRQP1H3H/YT-Thumbnail-Keyboard-Collection_004.jpg',
+                'https://nyckeyboardmeetup.com/static/images/events/20220917/DSC05856.jpg',
             button: "Let's check it",
         },
 
