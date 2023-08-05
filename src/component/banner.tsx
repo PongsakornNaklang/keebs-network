@@ -65,7 +65,7 @@ export default function Banner() {
     return (
         <Box
             position={'relative'}
-            height={'full'}
+            height={'48'}
             width={'full'}
             overflow={'hidden'}
         >
