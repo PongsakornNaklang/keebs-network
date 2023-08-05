@@ -1,15 +1,10 @@
 import { Button, Checkbox, CheckboxGroup, FormControl, FormLabel, Heading, Input, InputGroup, InputRightAddon, Select, Stack, Text, VStack } from "@chakra-ui/react"
 import { ArrowBendUpLeft, CloudArrowUp, Eye, FloppyDisk } from "@phosphor-icons/react"
-import { Editor, EditorOptions, TinyMCEEditor } from "@tinymce/tinymce-react"
+import { Editor } from "@tinymce/tinymce-react"
 import { useRouter } from "next/router"
 import { useRef, useState, useEffect } from "react"
 import UploadImageWall from "@/component/upload-img"
 import type { UploadFile } from 'antd/es/upload/interface';
-
-type EditorOption = EditorOptions & {
-    selector?: undefined
-    target?: undefined
-}
 
 const colorOptions = [
     "Black",
@@ -51,14 +46,14 @@ const pcbOptions = [
 
 const CreateIC = () => {
     const router = useRouter();
-    const editorRef = useRef<TinyMCEEditor | null>(null);
+    const editorRef = useRef<any>(null);
     const [fileList, setFileList] = useState<UploadFile[]>([]);
 
     useEffect(() => {
         console.log(fileList);
     }, [fileList])
 
-    const editerInit: EditorOption = {
+    const editerInit = {
         branding: false,
         height: 600,
         menubar: true,
