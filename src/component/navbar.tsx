@@ -6,14 +6,25 @@ import {
     Image,
     Button,
     useColorMode,
+    Avatar,
+    Text,
+    Menu,
+    MenuButton,
+    MenuList,
+    MenuGroup,
+    MenuItem,
+    MenuDivider,
 } from '@chakra-ui/react';
 import { Moon, SunDim } from '@phosphor-icons/react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
 export default function Navbar() {
     const { colorMode, toggleColorMode } = useColorMode()
     const router = useRouter()
+    const session = useSession()
+    console.log(session);
 
     useEffect(() => {
         console.log(colorMode);
@@ -36,8 +47,38 @@ export default function Navbar() {
                 </Flex>
                 <Flex
                     flex={{ base: 1, md: 0 }}
-                    justify={{ base: 'end', md: 'end' }}>
-                    <Button onClick={toggleColorMode}
+                    justify={{ base: 'end', md: 'end' }}
+                    className='space-x-4 items-center'
+                >
+                    {session.status === "authenticated" ? (
+                        <Flex className='items-center gap-x-2'>
+                            <Menu>
+                                <MenuButton>
+                                    <Flex className='items-center gap-x-2'>
+                                        <Avatar size="sm" />
+                                        {session.data.user.user}
+                                    </Flex>
+                                </MenuButton>
+                                <MenuList>
+                                    <MenuGroup title='Profile'>
+                                        <MenuItem>My Account</MenuItem>
+                                        <MenuItem>Payments</MenuItem>
+                                        <MenuItem onClick={() => signOut()}>Sign Out</MenuItem>
+                                    </MenuGroup>
+                                    <MenuDivider />
+                                    <MenuGroup title='Help'>
+                                        <MenuItem>Docs</MenuItem>
+                                        <MenuItem>FAQ</MenuItem>
+                                    </MenuGroup>
+                                </MenuList>
+                            </Menu>
+                        </Flex>
+                    ) : !router.pathname.includes("signin") ? (
+                        <Button onClick={() => signIn()}>
+                            Sign In
+                        </Button>
+                    ) : null}
+                    <Button onClick={toggleColorMode} variant="ghost"
                     >
                         {
                             colorMode === 'light' ? <SunDim size={18} weight="fill" /> : <Moon size={18} weight="fill" />

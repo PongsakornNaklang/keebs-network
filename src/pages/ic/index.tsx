@@ -1,6 +1,4 @@
-import NewItemSlider from '@/component/index/new-item-slider'
-import Banner from '@/component/index/banner'
-import { Box, Button, Heading, IconButton, Input, InputGroup, InputLeftElement, InputRightElement, Select, SkeletonCircle, SkeletonText, Stack, VisuallyHidden } from '@chakra-ui/react'
+import { Box, Button, Heading, Input, InputGroup, InputRightElement, Select, SkeletonCircle, SkeletonText, Stack } from '@chakra-ui/react'
 import { SearchIcon } from '@chakra-ui/icons'
 import { useRouter } from 'next/router'
 
@@ -19,7 +17,6 @@ export default function Ic() {
                         <SearchIcon />
                     </InputRightElement>
                 </InputGroup>
-
                 <Button onClick={() => router.push("/ic/create")}>Create your IC</Button>
             </Stack>
             <Stack direction={"row"}>

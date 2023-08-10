@@ -5,16 +5,18 @@ const Banner = () => {
     const router = useRouter()
     const purpleColor = useColorModeValue("purple.500", "purple.200");
     const tealColor = useColorModeValue("teal.500", "teal.200");
-    const textColor = useColorModeValue("white", "white");
+    const textColor = useColorModeValue("white", "#1a202c");
+    const textDescColor = useColorModeValue("white", "#1a202c");
 
     return (
         <>
-            <Card align='center' mb={4} bgGradient={`linear(to-r, ${purpleColor}, ${tealColor})`}>
+            <Card align='start' mb={4} bgGradient={`linear(to-r, ${purpleColor}, ${tealColor})`}>
                 <CardHeader>
-                    <Heading size='md' color={textColor}> Customer dashboard</Heading>
+                    <Heading color={textColor}>Welcome to Keebs Network! 🤓</Heading>
                 </CardHeader>
                 <CardBody>
-                    <Text color={textColor}>View a summary of all your customers over the last month.</Text>
+                    <Text fontSize='xl' color={textDescColor}>Discover, share, and create your dream custom keyboards with our vibrant community. ⌨️</Text>
+                    <Text fontSize='xl' color={textDescColor}>Join now and let's elevate the world of mechanical keyboards together! ✨</Text>
                 </CardBody>
                 <CardFooter className="gap-2">
                     <Button colorScheme="cyan" textColor={textColor} onClick={() => router.push("/ic")}>View IC</Button>
