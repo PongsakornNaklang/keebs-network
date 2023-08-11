@@ -1,8 +1,9 @@
-import { Stack, Text } from "@chakra-ui/react";
+import { Heading, Link, Stack, Text } from "@chakra-ui/react";
 import Slider from "react-slick";
 import ProductCard from "../product-card";
 import { useProduct } from "@/hook/useProduct";
 import { useEffect, useState } from "react";
+import { Row } from "antd";
 
 const NewItemSlider = () => {
     const { products } = useProduct();
@@ -45,9 +46,9 @@ const NewItemSlider = () => {
 
     return (
         <>
-            <Stack>
-                <Text>New</Text>
-            </Stack>
+            <Row className="flex gap-4 items-baseline">
+                <Heading size={"md"}>Lasted IC</Heading>
+            </Row>
             <Slider {...settings}>
                 {products.map((product, index) => (
                     <ProductCard {...product} />

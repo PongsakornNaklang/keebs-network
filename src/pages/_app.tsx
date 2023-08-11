@@ -3,15 +3,18 @@ import { SessionProvider, useSession } from "next-auth/react"
 
 import '../../styles/globals.scss';
 import { CacheProvider } from "@chakra-ui/next-js";
-import { ChakraProvider, ColorModeScript, Container, Flex, useColorModeValue } from "@chakra-ui/react";
+import { ChakraProvider, ColorModeScript, Container } from "@chakra-ui/react";
 import theme from "@/hook/theme";
+
+import dynamic from "next/dynamic";
+const Navbar = dynamic(() => import("@/component/navbar"), { ssr: false, loading: () => <NavbarLoading /> });
+const Footer = dynamic(() => import("@/component/footer"), { ssr: false });
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Nunito } from "next/font/google";
-import Navbar from "@/component/navbar";
-import Footer from "@/component/footer";
 import { NextComponentType, NextPageContext } from "next";
+import { NavbarLoading } from "@/component/navbar";
 
 const nunito = Nunito({ subsets: ['latin'] });
 
@@ -19,30 +22,25 @@ type Component = NextComponentType<NextPageContext, any, any> & {
     auth: boolean;
 };
 
-
 export default function MyApp({ Component, pageProps: { session, ...pageProps }, title = "Keebs Network" }: AppProps & { title: string, Component: Component }) {
     return (
         <CacheProvider>
-            <ChakraProvider>
+            <ChakraProvider theme={theme}>
                 <ColorModeScript initialColorMode={theme.config.initialColorMode} />
                 <SessionProvider session={session}>
                     <main className={nunito.className}>
                         <title>{title}</title>
-                        {Component.auth ? (
-                            <Auth>
-                                <Container maxW='container.xl' className="d-flex justify-content-center">
-                                    <Navbar />
+                        <Container maxW='container.xl' className="d-flex justify-content-center">
+                            <Navbar />
+                            {Component.auth ? (
+                                <Auth>
                                     <Component {...pageProps} />
-                                    <Footer />
-                                </Container>
-                            </Auth>
-                        ) : (
-                            <Container maxW='container.xl' className="d-flex justify-content-center">
-                                <Navbar />
+                                </Auth>
+                            ) : (
                                 <Component {...pageProps} />
-                                <Footer />
-                            </Container>
-                        )}
+                            )}
+                            <Footer />
+                        </Container>
                     </main>
                 </SessionProvider>
             </ChakraProvider>

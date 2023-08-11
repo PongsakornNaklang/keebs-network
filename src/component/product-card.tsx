@@ -1,6 +1,6 @@
-import { Image } from "@chakra-ui/next-js"
 import { Button, Card, CardBody, Heading, LinkBox, Stack, Tag, TagLabel, Text } from "@chakra-ui/react"
 import { ShoppingCart, Heart } from "@phosphor-icons/react"
+import Image from "next/image"
 
 export interface ProductCardProps {
     key: React.Key
@@ -19,9 +19,9 @@ const ProductCard = (props: ProductCardProps) => {
                     <Image
                         src={image}
                         alt={title}
-                        borderTopRadius='md'
-                        width={60}
-                        height={40}
+                        className="rounded-t-md object-cover w-[240px] h-[160px]"
+                        width={240}
+                        height={160}
                     />
                     <Stack mx='3' my='3' spacing='2'>
                         <Heading size='sm'>{title}</Heading>
