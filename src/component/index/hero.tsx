@@ -18,89 +18,88 @@ import { useRouter } from 'next/router'
 export default function Hero() {
     const router = useRouter()
     return (
-        <Container maxW={'7xl'}>
-            <Stack
-                align={'center'}
-                // spacing={{ base: 8, md: 10 }}
-                py={{ base: 14, md: 14 }}
-                direction={{ base: 'column', md: 'row' }}>
-                <Stack flex={1} spacing={{ base: 5, md: 10 }}>
-                    <Heading
-                        lineHeight={1.1}
-                        fontWeight={600}
-                        fontSize={{ base: '3xl', sm: '4xl', lg: '6xl' }}>
-                        <Text
-                            as={'span'}
-                            position={'relative'}
-                            _after={{
-                                content: "''",
-                                width: 'full',
-                                height: '30%',
-                                position: 'absolute',
-                                bottom: 1,
-                                left: 0,
-                                bg: 'pink.300',
-                                zIndex: -1,
-                            }}>
-                            Welcome to
-                        </Text>
-                        <br />
-                        <Text as={'span'} color={'cyan.300'} className='italic'>
-                            KEEBS NETWORK.
-                        </Text>
-                    </Heading>
-                    <Text color={'gray.500'}>
-                        Discover, share, and create your dream custom keyboards with our vibrant community. ⌨️
-                        Join now and let's elevate the world of mechanical keyboards together! ✨
+        <Stack
+            align={'center'}
+            // spacing={{ base: 8, md: 10 }}
+            py={{ base: 14, md: 14 }}
+            direction={{ base: 'column', md: 'row' }}
+        >
+            <Stack flex={1} spacing={{ base: 5, md: 10 }} zIndex={20}>
+                <Heading
+                    lineHeight={1.1}
+                    fontWeight={600}
+                    fontSize={{ base: '3xl', sm: '4xl', lg: '6xl' }}>
+                    <Text
+                        as={'span'}
+                        position={'relative'}
+                        _after={{
+                            content: "''",
+                            width: 'full',
+                            height: '30%',
+                            position: 'absolute',
+                            bottom: 1,
+                            left: 0,
+                            bg: 'pink.300',
+                            zIndex: -1,
+                        }}>
+                        Welcome to
                     </Text>
-                    <Stack spacing={{ base: 4, sm: 6 }} direction={{ base: 'column', sm: 'row' }}>
-                        <Button
-                            rounded={'full'}
-                            size={'lg'}
-                            fontWeight={'normal'}
-                            px={6}
-                            colorScheme={'red'}
-                            bg={'cyan.400'}
-                            _hover={{ bg: 'cyan.500' }}
-                            onClick={() => router.push("/ic")}
-                        >
-                            Get IC started
-                        </Button>
-                        <Button
-                            rounded={'full'}
-                            size={'lg'}
-                            fontWeight={'normal'}
-                            px={6}
-                            leftIcon={<PlayIcon h={4} w={4} color={'gray.300'} />}>
-                            How It Works
-                        </Button>
-                    </Stack>
+                    <br />
+                    <Text as={'span'} color={'cyan.300'} className='italic'>
+                        KEEBS NETWORK.
+                    </Text>
+                </Heading>
+                <Text color={'gray.500'}>
+                    Discover, share, and create your dream custom keyboards with our vibrant community. ⌨️
+                    Join now and let's elevate the world of mechanical keyboards together! ✨
+                </Text>
+                <Stack spacing={{ base: 4, sm: 6 }} direction={{ base: 'column', sm: 'row' }}>
+                    <Button
+                        rounded={'full'}
+                        size={'lg'}
+                        fontWeight={'normal'}
+                        px={6}
+                        colorScheme={'red'}
+                        bg={'cyan.400'}
+                        _hover={{ bg: 'cyan.500' }}
+                        onClick={() => router.push("/ic")}
+                    >
+                        Get IC started
+                    </Button>
+                    <Button
+                        rounded={'full'}
+                        size={'lg'}
+                        fontWeight={'normal'}
+                        px={6}
+                        leftIcon={<PlayIcon h={4} w={4} color={'gray.300'} />}>
+                        How It Works
+                    </Button>
                 </Stack>
-                <Flex
-                    flex={1}
-                    justify={'center'}
-                    align={'center'}
-                    position={'relative'}
-                    w={'full'}>
-                    <Blob
-                        w={'140%'}
-                        h={'120%'}
-                        position={'absolute'}
-                        top={'-20%'}
-                        left={0}
-                        zIndex={-1}
-                        color={useColorModeValue('pink.100', 'pink.100')}
-                    />
-                    <Image
-                        alt={'Hero Image'}
-                        className="object-cover object-center rounded-lg w-full h-[322px]"
-                        // width={500}
-                        // height={100}
-                        src={logo}
-                    />
-                </Flex>
             </Stack>
-        </Container>
+            <Flex
+                flex={1}
+                justify={'center'}
+                align={'center'}
+                position={'relative'}
+                w={'full'}>
+                <Blob
+                    w={'130%'}
+                    h={'120%'}
+                    position={'absolute'}
+                    top={'-14%'}
+                    left={0}
+                    zIndex={1}
+                    color={useColorModeValue('pink.100', 'pink.100')}
+                />
+                <Image
+                    alt={'Hero Image'}
+                    className="object-cover object-center rounded-lg w-full h-[333px] z-10"
+                    // width={500}
+                    // height={100}
+                    src={logo}
+                />
+            </Flex>
+        </Stack>
     )
 }
 

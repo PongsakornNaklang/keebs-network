@@ -1,4 +1,4 @@
-import { Heading, Link, Stack, Text } from "@chakra-ui/react";
+import { Box, Heading, Link, Skeleton, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import Slider from "react-slick";
 import ProductCard from "../product-card";
 import { useProduct } from "@/hook/useProduct";
@@ -45,8 +45,8 @@ const NewItemSlider = () => {
     };
 
     return (
-        <>
-            <Row className="flex gap-4 items-baseline">
+        <Box minH={"100%"}>
+            <Row className="flex gap-4 items-baseline mb-4">
                 <Heading size={"md"}>Lasted IC</Heading>
             </Row>
             <Slider {...settings}>
@@ -54,7 +54,7 @@ const NewItemSlider = () => {
                     <ProductCard {...product} />
                 ))}
             </Slider>
-        </>
+        </Box>
     )
 }
 

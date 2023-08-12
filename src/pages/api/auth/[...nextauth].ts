@@ -61,9 +61,6 @@ export const authOptions: NextAuthOptions = {
         signIn: "/signin"
     },
     callbacks: {
-        async signIn({ user, account, profile, email, credentials }) {
-            return true
-        },
         async jwt({ token, user, account }) {
             if (account) {
                 token.accessToken = user.token

@@ -3,18 +3,17 @@ import { SessionProvider, useSession } from "next-auth/react"
 
 import '../../styles/globals.scss';
 import { CacheProvider } from "@chakra-ui/next-js";
-import { ChakraProvider, ColorModeScript, Container } from "@chakra-ui/react";
+import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
 import theme from "@/hook/theme";
 
 import dynamic from "next/dynamic";
-const Navbar = dynamic(() => import("@/component/navbar"), { ssr: false, loading: () => <NavbarLoading /> });
-const Footer = dynamic(() => import("@/component/footer"), { ssr: false });
+const Layout = dynamic(() => import("@/component/layout"), { ssr: false });
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Nunito } from "next/font/google";
 import { NextComponentType, NextPageContext } from "next";
-import { NavbarLoading } from "@/component/navbar";
+import { SignInSkeleton } from "@/component/auth/signInTemp";
 
 const nunito = Nunito({ subsets: ['latin'] });
 
@@ -30,8 +29,7 @@ export default function MyApp({ Component, pageProps: { session, ...pageProps },
                 <SessionProvider session={session}>
                     <main className={nunito.className}>
                         <title>{title}</title>
-                        <Container maxW='container.xl' className="d-flex justify-content-center">
-                            <Navbar />
+                        <Layout>
                             {Component.auth ? (
                                 <Auth>
                                     <Component {...pageProps} />
@@ -39,12 +37,11 @@ export default function MyApp({ Component, pageProps: { session, ...pageProps },
                             ) : (
                                 <Component {...pageProps} />
                             )}
-                            <Footer />
-                        </Container>
+                        </Layout>
                     </main>
-                </SessionProvider>
-            </ChakraProvider>
-        </CacheProvider>
+                </SessionProvider >
+            </ChakraProvider >
+        </CacheProvider >
     )
 }
 
@@ -53,7 +50,7 @@ const Auth = ({ children }: { children: React.ReactNode }) => {
     const { status } = useSession({ required: true })
 
     if (status === "loading") {
-        return <div>Loading...</div>
+        return <SignInSkeleton />
     }
 
     return children
