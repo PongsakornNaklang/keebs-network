@@ -3,7 +3,7 @@ import { SessionProvider, useSession } from "next-auth/react"
 
 import '../../styles/globals.scss';
 import { CacheProvider } from "@chakra-ui/next-js";
-import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
+import { ChakraProvider, ColorModeScript, UseToastOptions } from "@chakra-ui/react";
 import theme from "@/hook/theme";
 
 import dynamic from "next/dynamic";
@@ -13,9 +13,14 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Nunito } from "next/font/google";
 import { NextComponentType, NextPageContext } from "next";
-import { SignInSkeleton } from "@/component/auth/signInTemp";
 
 const nunito = Nunito({ subsets: ['latin'] });
+
+const defaultOptions: UseToastOptions = {
+    position: 'top',
+    duration: 2000,
+    isClosable: true
+}
 
 type Component = NextComponentType<NextPageContext, any, any> & {
     auth: boolean;
@@ -24,7 +29,7 @@ type Component = NextComponentType<NextPageContext, any, any> & {
 export default function MyApp({ Component, pageProps: { session, ...pageProps }, title = "Keebs Network" }: AppProps & { title: string, Component: Component }) {
     return (
         <CacheProvider>
-            <ChakraProvider theme={theme}>
+            <ChakraProvider theme={theme} toastOptions={{ defaultOptions }}>
                 <ColorModeScript initialColorMode={theme.config.initialColorMode} />
                 <SessionProvider session={session}>
                     <main className={nunito.className}>
@@ -50,7 +55,7 @@ const Auth = ({ children }: { children: React.ReactNode }) => {
     const { status } = useSession({ required: true })
 
     if (status === "loading") {
-        return <SignInSkeleton />
+        return null
     }
 
     return children

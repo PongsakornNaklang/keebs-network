@@ -29,6 +29,7 @@
     "framer-motion": "^10.15.1",
     "megadraft": "^0.8.0",
     "mongodb": "^5.7.0",
+    "mongoose": "^7.4.3",
     "next": "13.4.6",
     "next-auth": "^4.22.3",
     "playwright": "^1.36.2",

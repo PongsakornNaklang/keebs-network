@@ -1,10 +1,14 @@
-import { Box, Flex, Link, Button, Avatar, Menu, MenuButton, MenuList, MenuGroup, MenuItem, MenuDivider, useColorMode, useColorModeValue, useDisclosure, Container, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, useToast } from '@chakra-ui/react';
+import { Box, Flex, Link, Button, Avatar, Menu, MenuButton, MenuList, MenuItem, MenuDivider, useColorMode, useColorModeValue, useDisclosure, Container, Center } from '@chakra-ui/react';
 
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import logo from './../../public/keebs-network-high-logo.png'
-import SignupCard from './auth/signUpModal';
+import SignupCard from './auth/signup-modal';
+import ProfileModal from './index/profile-modal';
+import { MoonIcon, SunIcon } from '@chakra-ui/icons';
+import SignOutModal from './auth/signout-modal';
+import SignInModal from './auth/signIn-modal';
 
 export default function Navbar() {
     const router = useRouter();
@@ -12,6 +16,10 @@ export default function Navbar() {
 
     const signOutModal = useDisclosure()
     const signUpModal = useDisclosure()
+    const profileModal = useDisclosure()
+    const signInModal = useDisclosure()
+
+    const { colorMode, toggleColorMode } = useColorMode()
 
     return (
         <Box boxShadow={'lg'} zIndex={20}>
@@ -31,31 +39,43 @@ export default function Navbar() {
                         justify={{ base: 'end', md: 'end' }}
                         className='space-x-2 items-center'
                     >
+                        <Button rounded={"full"} w={"40px"} h={"40px"} onClick={toggleColorMode}>
+                            {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
+                        </Button>
                         {session.status === "authenticated" ? (
                             <Flex className='items-center gap-x-2' zIndex={100}>
                                 <Menu>
                                     <MenuButton
-                                        _hover={{
-                                            background: useColorModeValue('gray.100', 'gray.700'),
-                                        }}
+                                        as={Button}
+                                        rounded={'full'}
+                                        variant={'link'}
+                                        cursor={'pointer'}
+                                        minW={0}
                                         className='px-2 py-2 rounded-full'
                                     >
-                                        <Flex className='items-center gap-x-2'>
-                                            <Avatar size="sm" />
-                                            {session.data.user.user}
-                                        </Flex>
+                                        <Avatar
+                                            w={"40px"}
+                                            h={"40px"}
+                                            src={session.data?.user.image ?? undefined}
+                                        />
                                     </MenuButton>
-                                    <MenuList>
-                                        <MenuGroup title='Profile'>
-                                            <MenuItem>My Account</MenuItem>
-                                            <MenuItem>Payments</MenuItem>
-                                            <MenuItem onClick={signOutModal.onOpen}>Sign Out</MenuItem>
-                                        </MenuGroup>
+                                    <MenuList alignItems={'center'}>
+                                        <br />
+                                        <Center>
+                                            <Avatar
+                                                size={'xl'}
+                                                src={session.data?.user.image ?? undefined}
+                                            />
+                                        </Center>
+                                        <br />
+                                        <Center>
+                                            <p>{session.data?.user?.username}</p>
+                                        </Center>
+                                        <br />
                                         <MenuDivider />
-                                        <MenuGroup title='Help'>
-                                            <MenuItem>Docs</MenuItem>
-                                            <MenuItem>FAQ</MenuItem>
-                                        </MenuGroup>
+                                        <MenuItem>Your Projects</MenuItem>
+                                        <MenuItem onClick={profileModal.onOpen}>Account Settings</MenuItem>
+                                        <MenuItem onClick={signOutModal.onOpen}>Sign Out</MenuItem>
                                     </MenuList>
                                 </Menu>
                             </Flex>
@@ -64,7 +84,7 @@ export default function Navbar() {
                                 <Button variant='ghost' onClick={signUpModal.onOpen}>
                                     Sign Up
                                 </Button>
-                                <Button colorScheme='cyan' color={useColorModeValue("white", "gray.800")} onClick={() => signIn()}>
+                                <Button colorScheme='cyan' color={useColorModeValue("white", "gray.800")} onClick={signInModal.onOpen}>
                                     Sign In
                                 </Button>
                             </Flex>
@@ -73,6 +93,8 @@ export default function Navbar() {
                 </Flex>
                 <SignupCard isOpen={signUpModal.isOpen} onClose={signUpModal.onClose} />
                 <SignOutModal isOpen={signOutModal.isOpen} onClose={signOutModal.onClose} />
+                <ProfileModal isOpen={profileModal.isOpen} onClose={profileModal.onClose} />
+                <SignInModal isOpen={signInModal.isOpen} onClose={signInModal.onClose} />
             </Container>
         </Box>
     );
@@ -84,47 +106,5 @@ export const NavbarLoading = () => {
             <Flex className="min-h-[70px] py-2 bg-transparent z-2 left-0 right-0 m-auto items-center">
             </Flex>
         </Box>
-    )
-}
-
-const SignOutModal = ({ isOpen, onClose }: any) => {
-    const toast = useToast()
-
-    return (
-        <>
-            <Modal isOpen={isOpen} onClose={onClose}>
-                <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader>Do you want to sign out?</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                        You will be redirected to the home page.
-                    </ModalBody>
-
-                    <ModalFooter>
-                        <Button colorScheme='blue' mr={3} onClick={onClose}>
-                            No
-                        </Button>
-                        <Button variant='ghost' onClick={() => {
-                            signOut({
-                                callbackUrl: "/",
-                                redirect: false,
-                            })
-                            onClose()
-                            toast({
-                                title: "Signed out",
-                                description: "You have been signed out. Bye! 👋",
-                                status: "success",
-                                duration: 2000,
-                                isClosable: true,
-                                position: "top",
-                                colorScheme: "cyan"
-                            })
-                        }
-                        }>Yes, Sign out</Button>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
-        </>
     )
 }

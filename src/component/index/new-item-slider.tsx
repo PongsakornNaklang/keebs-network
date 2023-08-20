@@ -35,7 +35,7 @@ const NewItemSlider = () => {
 
     const settings = {
         dots: false,
-        arrows: true,
+        arrows: false,
         infinite: true,
         speed: 500,
         slidesToShow: slidesToShow,

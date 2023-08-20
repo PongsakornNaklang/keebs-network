@@ -1,14 +1,15 @@
 import NextAuth, { NextAuthOptions, User } from "next-auth"
-import GithubProvider from "next-auth/providers/github"
+import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials"
 
-// import bcrypt from "bcrypt";
 import clientPromise from "../../../lib/mongodb";
 import { MongoClient } from "mongodb";
 import { v4 as uuidv4 } from 'uuid';
+import bcrypt from 'bcrypt';
+import { IUser } from "../../../../types/next-auth";
 
 export const authOptions: NextAuthOptions = {
-    secret: process.env.SECRET,
+    secret: process.env.NEXTAUTH_SECRET,
     providers: [
         CredentialsProvider({
             name: "Credentials",
@@ -36,31 +37,83 @@ export const authOptions: NextAuthOptions = {
                 const token = generateToken()
                 await saveTokenToMongoDB(token, user);
 
-                const userData = {
+                const userData: IUser = {
                     id: user._id.toString(),
-                    user: user,
+                    username: user.username,
                     email: user.email,
-                    name: user.name,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
                     image: user.image,
+                    password: user.password,
+                    type: "credentials"
                 }
 
-                return userData as any
+                const data: User = {
+                    user: userData,
+                    id: userData.id,
+                    token: {
+                        token: token,
+                        type: "credentials",
+                        expires_at: ""
+                    },
+                    email: userData.email,
+                    image: userData.image,
+                    name: userData.username
+                }
+
+                return data
             }
         }),
-        GithubProvider({
-            clientId: process.env.GITHUB_ID ?? "",
-            clientSecret: process.env.GITHUB_SECRET ?? "",
-        }),
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID ?? "",
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
+        })
         // ...add more providers here
     ],
     session: {
         strategy: "jwt",
-        maxAge: 30 * 24 * 60 * 60, // 30 days
+        maxAge: 7 * 24 * 60 * 60, // 7 days
     },
     pages: {
         signIn: "/signin"
     },
     callbacks: {
+        async signIn({ account, profile }: any) {
+            if (account?.provider === "google" && profile) {
+                console.log(profile);
+                try {
+                    const client = await clientPromise;
+                    const db = client.db('Keebs_Network');
+                    const usersCollection = db.collection('users');
+
+                    const alreadyUser = await usersCollection.findOne({
+                        $or: [
+                            { email: profile.email },
+                        ]
+                    });
+                    if (alreadyUser) {
+                        return true
+                    }
+
+                    const user: Partial<IUser> = {
+                        email: profile.email ?? "",
+                        firstName: profile?.given_name,
+                        lastName: profile?.family_name,
+                        username: profile.email?.split("@gmail.com")[0] ?? "",
+                        image: profile?.picture
+                    }
+
+                    const result = await usersCollection.insertOne(user);
+                    if (!result) throw new Error('Create User failed');
+
+                    return true
+                } catch (error: any) {
+                    return false
+                }
+            }
+
+            return true
+        },
         async jwt({ token, user, account }) {
             if (account) {
                 token.accessToken = user.token
@@ -69,8 +122,22 @@ export const authOptions: NextAuthOptions = {
             return token
         },
         async session({ session, token }) {
-            session.user = token.user
-            session.accessToken = token.accessToken
+            console.log(session, token);
+            if (token.user && token.accessToken) {
+                token.user.password = ""
+                session.user = token.user
+                session.accessToken = token.accessToken
+            } else {
+                const client = await clientPromise;
+                const db = client.db('Keebs_Network');
+                const usersCollection = db.collection('users');
+
+                const user: any = await usersCollection.findOne({ email: token.email });
+                user.type = "google"
+                session.user = user
+                session.accessToken = token.accessToken
+            }
+
             return session
         }
     }
@@ -78,15 +145,13 @@ export const authOptions: NextAuthOptions = {
 export default NextAuth(authOptions)
 
 async function verifyCredentials(password: string, user: any): Promise<boolean> {
-    // const passwordIsValid = await bcrypt.compare(
-    //     password!,
-    //     user?.password
-    // );
+    const passwordIsValid = await bcrypt.compare(password, user?.password)
 
-    const passwordIsValid = password === user?.password
+    // const passwordIsValid = password === user?.password
 
     if (!passwordIsValid) {
-        throw new Error("Invalid credentials");
+        // throw new Error("Invalid credentials");
+        return false
     }
     return true;
 }

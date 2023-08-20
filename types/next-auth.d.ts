@@ -1,17 +1,19 @@
 import NextAuth from "next-auth"
 interface IUser {
     id: string
-    name: string
+    firstName: string
+    lastName: string
+    username: string
     email: string
     password: string
-    user: string
     image: string
+    type: string
 }
 
 interface IToken {
     type: string
     token: string
-    // expires_at: string
+    expires_at: string
 }
 
 declare module "next-auth" {

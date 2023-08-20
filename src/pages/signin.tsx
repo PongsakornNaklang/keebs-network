@@ -1,13 +1,16 @@
-import dynamic from "next/dynamic"
-const SignInContainer = dynamic(() => import("@/component/auth/signInTemp"), { ssr: false });
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import SignInModal from "@/component/auth/signIn-modal";
 
-const SignIn = () => {
+const SignInPage = () => {
+    const router = useRouter();
 
-    return (
-        <>
-            <SignInContainer />
-        </>
-    )
-}
+    const onCloseModal = () => {
+        router.back();
+        router.back();
+    };
 
-export default SignIn
+    return <SignInModal isOpen={true} onClose={onCloseModal} />;
+};
+
+export default SignInPage;
