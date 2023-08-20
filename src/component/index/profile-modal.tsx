@@ -1,8 +1,8 @@
 'use client'
+import { updateProfile } from '@/lib/auth'
 import { IUsers } from '@/pages/api/user'
 import { SmallCloseIcon } from '@chakra-ui/icons'
 import { Avatar, AvatarBadge, Button, Center, FormControl, FormLabel, HStack, Heading, Icon, IconButton, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Tag, TagLabel, TagLeftIcon, useColorModeValue, useDisclosure, useEditableControls, useToast } from '@chakra-ui/react'
-import axios from 'axios'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import React, { useRef, useState } from 'react'
@@ -31,11 +31,7 @@ const ProfileModal = ({ isOpen, onClose }: any) => {
 
 
         try {
-            await axios.patch('/api/user', payload, {
-                headers: {
-                    Authorization: `Bearer ${session.data?.accessToken.token}`
-                }
-            })
+            await updateProfile(payload)
             toast({
                 title: "Update success",
                 description: "Your profile has been updated",

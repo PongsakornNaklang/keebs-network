@@ -27,7 +27,7 @@ import { signIn } from 'next-auth/react'
 import { FcGoogle } from 'react-icons/fc'
 import { useRouter } from 'next/router'
 import { IUsers } from '@/pages/api/signup'
-import axios from 'axios'
+import { postSignup } from '@/lib/auth'
 
 export default function SignupCard({ isOpen, onClose }: any) {
     const [showPassword, setShowPassword] = useState(false)
@@ -61,7 +61,7 @@ export default function SignupCard({ isOpen, onClose }: any) {
             };
 
             try {
-                const response = await axios.post('/api/signup', data);
+                const response = await postSignup(data);
 
                 if (response.status === 201) {
                     const signInResult = await signIn('credentials', {
